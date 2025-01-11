@@ -7,7 +7,7 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [newBlog, setNewBlog] = useState({title: '', author: '', url: ''})
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState({message: null, type: null})
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -28,6 +28,13 @@ const App = () => {
   }
   , [])
 
+  const handleNotification = (message, type = 'success') => {
+    setNotification({message, type})
+    setTimeout(() => {
+      setNotification({message: null, type: null})
+    }, 5000)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -42,11 +49,9 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      handleNotification('Logged in', 'success')
     } catch (exception) {
-      setErrorMessage('wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      handleNotification('Wrong credentials', 'error')
     }
   }
 
@@ -54,6 +59,7 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
     blogService.setToken(null)
+    handleNotification('Logged out')
   }
 
   const addBlog = async (event) => {
@@ -62,15 +68,9 @@ const App = () => {
       const createdBlog = await blogService.create(newBlog)
       setBlogs(blogs.concat(createdBlog))
       setNewBlog({title: '', author: user.name, url: ''})
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-
+      handleNotification(`A new blog ${createdBlog.title} by ${createdBlog.author} added`)
     } catch (exception) {
-      setErrorMessage('Error adding blog')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      handleNotification('Failed to create blog', 'error')
     }
   }
 
@@ -82,7 +82,7 @@ const App = () => {
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
-      <Notification message={errorMessage} />
+      <Notification message={notification.message} tyoe={notification.type}/>
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -110,6 +110,7 @@ const App = () => {
   const blogForm = () => (
     <form onSubmit={addBlog}>
       <h2>Create new blog</h2>
+      <Notification message={notification.message} tyoe={notification.type}/>
       <div>
         title:
         <input
