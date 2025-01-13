@@ -69,6 +69,7 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
+        setBlogsVisible(false)
         handleNotification(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
       })
       .catch(error => {
