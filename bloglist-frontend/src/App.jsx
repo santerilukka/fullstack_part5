@@ -4,10 +4,10 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [newBlog, setNewBlog] = useState({title: '', author: '', url: ''})
   const [notification, setNotification] = useState({message: null, type: null})
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -64,23 +64,18 @@ const App = () => {
     handleNotification('Logged out')
   }
 
-  const addBlog = async (event) => {
-    event.preventDefault()
-    try {
-      const createdBlog = await blogService.create(newBlog)
-      setBlogs(blogs.concat(createdBlog))
-      setNewBlog({title: '', author: user.name, url: ''})
-      handleNotification(`A new blog ${createdBlog.title} by ${createdBlog.author} added`)
-      setBlogsVisible(false)
-    } catch (exception) {
-      handleNotification('Failed to create blog', 'error')
+  const addBlog = (blogObject) => {
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        handleNotification(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+      })
+      .catch(error => {
+        handleNotification(error.response.data.error, 'error')
+      })
     }
-  }
 
-  const handleBlogChange = (event) => {
-    const {name, value} = event.target
-    setNewBlog({...newBlog, [name]: value})
-  }
 
   const loginForm = () => (
     <div>
@@ -120,12 +115,7 @@ const App = () => {
           <button onClick={() => setBlogsVisible(true)}>new blog</button>
         </div>
         <div style={showWhenVisible}>
-          <BlogForm 
-          addBlog={addBlog}
-          newBlog={newBlog}
-          handleBlogChange={handleBlogChange}
-          notification={notification}
-          />
+          <BlogForm createBlog={addBlog}/>
           <button onClick={() => setBlogsVisible(false)}>cancel</button>
         </div>
       </div>
