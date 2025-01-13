@@ -71,6 +71,7 @@ const App = () => {
       setBlogs(blogs.concat(createdBlog))
       setNewBlog({title: '', author: user.name, url: ''})
       handleNotification(`A new blog ${createdBlog.title} by ${createdBlog.author} added`)
+      setBlogsVisible(false)
     } catch (exception) {
       handleNotification('Failed to create blog', 'error')
     }
