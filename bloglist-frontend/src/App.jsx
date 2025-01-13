@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +12,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [blogsVisible, setBlogsVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -107,31 +109,27 @@ const App = () => {
     </div>
   )
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <h2>Create new blog</h2>
-      <Notification message={notification.message} tyoe={notification.type}/>
+  const blogForm = () => {
+    const hideWhenVisible = { display: blogsVisible ? 'none' : '' }
+    const showWhenVisible = { display: blogsVisible ? '' : 'none' }
+
+    return (
       <div>
-        title:
-        <input
-          type="text"
-          name="title"
-          value={newBlog.title}
-          onChange={handleBlogChange}
-        />
+        <div style={hideWhenVisible}>
+          <button onClick={() => setBlogsVisible(true)}>new blog</button>
+        </div>
+        <div style={showWhenVisible}>
+          <BlogForm 
+          addBlog={addBlog}
+          newBlog={newBlog}
+          handleBlogChange={handleBlogChange}
+          notification={notification}
+          />
+          <button onClick={() => setBlogsVisible(false)}>cancel</button>
+        </div>
       </div>
-      <div>
-        url:
-        <input
-          type="text"
-          name="url"
-          value={newBlog.url}
-          onChange={handleBlogChange}
-        />
-      </div>
-      <button type="submit">create</button>
-    </form>
-  )
+    )
+  }
 
   const blogList = () => (
     <div>
