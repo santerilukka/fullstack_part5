@@ -65,7 +65,7 @@ const App = () => {
     handleNotification('Logged out')
   }
 
-  const handleLike = async (blog) => {
+  const handleLike = async (blog) => { 
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
