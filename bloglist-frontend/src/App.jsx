@@ -84,6 +84,18 @@ const App = () => {
       handleNotification(exception.response.data.error, 'error')
     }
   }
+
+  const handleRemove = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      try {
+        await blogService.remove(blog.id)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+        handleNotification(`Blog ${blog.title} by ${blog.author} removed`)
+      } catch (exception) {
+        handleNotification(exception.response.data.error, 'error')
+      }
+    }
+  }
   
 
   const addBlog = (blogObject) => {
@@ -154,7 +166,13 @@ const App = () => {
       {blogs
         .sort((a, b) => b.likes - a.likes)
         .map(blog =>
-          <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+          <Blog 
+            key={blog.id} 
+            blog={blog} 
+            handleLike={handleLike} 
+            handleRemove={handleRemove} 
+            loggedInUser={user}
+          />
       )}
     </div>
   )
