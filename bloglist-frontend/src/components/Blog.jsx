@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLike }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -31,7 +31,7 @@ const Blog = ({ blog }) => {
         <div>{blog.user.name}</div>
         <div>
           likes {blog.likes}
-          <button>like</button>
+          <button onClick={() => handleLike(blog)}>like</button>
         </div>
       </div>
     </div>
