@@ -9,7 +9,7 @@ import { use } from 'react'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [notification, setNotification] = useState({message: null, type: null})
+  const [notification, setNotification] = useState({ message: null, type: null })
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -18,7 +18,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -32,9 +32,9 @@ const App = () => {
   , [])
 
   const handleNotification = (message, type = 'success') => {
-    setNotification({message, type})
+    setNotification({ message, type })
     setTimeout(() => {
-      setNotification({message: null, type: null})
+      setNotification({ message: null, type: null })
     }, 5000)
   }
 
@@ -65,20 +65,20 @@ const App = () => {
     handleNotification('Logged out')
   }
 
-  const handleLike = async (blog) => { 
+  const handleLike = async (blog) => {
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1,
       user: blog.user.id || blog.user,
     }
-  
+
     try {
       const returnedBlog = await blogService.update(blog.id, updatedBlog)
       const blogWithUser = {
         ...returnedBlog,
         user: blog.user,
       }
-  
+
       setBlogs(blogs.map(b => b.id === blog.id ? blogWithUser : b))
     } catch (exception) {
       handleNotification(exception.response.data.error, 'error')
@@ -96,7 +96,7 @@ const App = () => {
       }
     }
   }
-  
+
 
   const addBlog = (blogObject) => {
     blogService
@@ -109,7 +109,7 @@ const App = () => {
       .catch(error => {
         handleNotification(error.response.data.error, 'error')
       })
-    }
+  }
 
 
   const loginForm = () => (
@@ -166,14 +166,14 @@ const App = () => {
       {blogs
         .sort((a, b) => b.likes - a.likes)
         .map(blog =>
-          <Blog 
-            key={blog.id} 
-            blog={blog} 
-            handleLike={handleLike} 
-            handleRemove={handleRemove} 
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleLike={handleLike}
+            handleRemove={handleRemove}
             loggedInUser={user}
           />
-      )}
+        )}
     </div>
   )
 
