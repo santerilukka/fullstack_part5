@@ -15,7 +15,7 @@ const BlogForm = ({ createBlog, notification }) => {
   }
 
   return (
-    <div>
+    <div className='formDiv'>
       <h2>Create new blog</h2>
       <form onSubmit={addBlog}>
         <div>
@@ -25,6 +25,8 @@ const BlogForm = ({ createBlog, notification }) => {
             value={newBlog.title}
             name="Title"
             onChange={({ target }) => setNewBlog({ ...newBlog, title: target.value })}
+            placeholder='Write the title of the blog'
+            id='blog-title'
           />
         </div>
         <div>
@@ -34,6 +36,8 @@ const BlogForm = ({ createBlog, notification }) => {
             value={newBlog.url}
             name="Url"
             onChange={({ target }) => setNewBlog({ ...newBlog, url: target.value })}
+            placeholder='Write the url of the blog'
+            id='blog-url'
           />
         </div>
         <button type="submit">create</button>
