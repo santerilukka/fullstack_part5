@@ -28,12 +28,12 @@ const Blog = ({ blog, handleLike, handleRemove, loggedInUser }) => {
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>hide</button>
         <div>{blog.url}</div>
-        <div>{blog.user.name}</div>
+        <div>{blog.user ? blog.user.name : 'User not available'}</div>
         <div>
           likes {blog.likes}
           <button onClick={() => handleLike(blog)}>like</button>
         </div>
-        {loggedInUser.username === blog.user.username && (
+        {loggedInUser.username === blog.user?.username && (
           <div>
             <button onClick={() => handleRemove(blog)}>remove</button>
           </div>

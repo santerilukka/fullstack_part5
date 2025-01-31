@@ -162,7 +162,7 @@ const App = () => {
   const blogList = () => (
     <div>
       <h2>Blogs</h2>
-      <p>{user.name} logged in</p>
+      <p data-testid="logged-in-user">{user.name} logged in</p>
       <button onClick={handleLogout}>logout</button>
       {blogForm()}
       {blogs
