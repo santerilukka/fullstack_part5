@@ -21,6 +21,7 @@ const BlogForm = ({ createBlog, notification }) => {
         <div>
                 title
           <input
+            data-testid='blog-title'
             type="text"
             value={newBlog.title}
             name="Title"
@@ -32,6 +33,7 @@ const BlogForm = ({ createBlog, notification }) => {
         <div>
                 url
           <input
+            data-testid='blog-url'
             type="text"
             value={newBlog.url}
             name="Url"
