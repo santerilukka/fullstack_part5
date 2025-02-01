@@ -3,8 +3,9 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 
 router.post('/reset', async (request, response) => {
-  await Note.deleteMany({})
+  await Blog.deleteMany({})
   await User.deleteMany({})
+  console.log('Database reset complete')
 
   response.status(204).end()
 })

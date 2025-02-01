@@ -42,7 +42,7 @@ const BlogForm = ({ createBlog, notification }) => {
             id='blog-url'
           />
         </div>
-        <button type="submit">create</button>
+        <button type="submit" data-testid='blog-create-button'>create</button>
       </form>
     </div>
   )

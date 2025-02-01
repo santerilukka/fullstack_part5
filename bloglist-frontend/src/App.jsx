@@ -149,7 +149,7 @@ const App = () => {
     return (
       <div>
         <div style={hideWhenVisible}>
-          <button onClick={() => setBlogsVisible(true)}>new blog</button>
+          <button data-testid='new-blogButton' onClick={() => setBlogsVisible(true)}>new blog</button>
         </div>
         <div style={showWhenVisible}>
           <BlogForm createBlog={addBlog}/>

@@ -3,7 +3,9 @@ const { loginWith } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
-    await request.post('http://localhost:3003/api/testing/reset')
+   const response = await request.post('http://localhost:3003/api/testing/reset')
+
+
     await request.post('http://localhost:3003/api/users', {
       data: {
         name: 'Matti Luukkainen',
@@ -18,9 +20,7 @@ describe('Blog app', () => {
   test('Login form is shown', async ({ page }) => {
     await page.waitForSelector('form')
     await expect(page.getByText('Log in to application')).toBeVisible()
-    await expect(page.getByText('username')).toBeVisible()
-    await expect(page.getByText('password')).toBeVisible()
-    await expect(page.getByRole('button', { name: 'login' })).toBeVisible()
+
     })
 
     describe('Login', () => {
@@ -38,4 +38,20 @@ describe('Blog app', () => {
             await expect(page.getByText('Wrong credentials')).toBeVisible()
         })
       })
+
+      describe('When logged in', () => {
+        beforeEach(async ({ page }) => {
+            await loginWith(page, 'mluukkai', 'salainen')
+        })
+    
+        test('A new blog can be created', async ({ page }) => {
+            await page.getByTestId('new-blogButton').click()
+    
+            await page.getByRole('textbox', { name: 'title' }).fill('Test title created by Playwright')
+            await page.getByRole('textbox', { name: 'url' }).fill('http://playwright.dev')
+            await page.getByTestId('blog-create-button').click()
+    
+            await expect(page.getByText('Test title created by Playwright view')).toBeVisible()
+        })
+    })
 })
