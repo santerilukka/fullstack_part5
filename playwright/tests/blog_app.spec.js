@@ -58,6 +58,18 @@ describe('Blog app', () => {
             
             await expect(page.getByText('likes 1')).toBeVisible()
         })
+        test('A blog can be removed', async ({ page }) => {
+            await createBlog(page, 'Test title created by Playwright', 'http://playwright.dev')
+            await page.getByText('view').click()
+
+            page.on('dialog', async dialog => {
+                await dialog.accept()
+            })
+            
+            await page.getByText('remove').click()
+    
+            await expect(page.getByText('Test title created by Playwright')).not.toBeVisible()
+        })
     })
     describe('When logged in and creating multiple blogs', () => {
         beforeEach(async ({ page }) => {
