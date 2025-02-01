@@ -58,8 +58,41 @@ describe('Blog app', () => {
             
             await expect(page.getByText('likes 1')).toBeVisible()
         })
-
     })
+    describe('When logged in and creating multiple blogs', () => {
+        beforeEach(async ({ page }) => {
+            await loginWith(page, 'mluukkai', 'salainen');
+        });
+
+        test('Blogs are ordered by likes', async ({ page }) => {
+            await createBlog(page, 'blog-1', 'Testitero', 'http://blog-1.dev')
+            await createBlog(page, 'blog-2', 'Testaajatero', 'http://blog-2.dev')
+            await createBlog(page, 'blog-3', 'TestiTomppa', 'http://blog-3.dev')
+
+            const blog1 = page.locator('.blog').filter({ hasText: 'blog-1' })
+            const blog2 = page.locator('.blog').filter({ hasText: 'blog-2' })
+            const blog3 = page.locator('.blog').filter({ hasText: 'blog-3' })
+    
+            await blog1.getByRole('button', { name: 'view' }).click()
+            await blog2.getByRole('button', { name: 'view' }).click()
+            await blog3.getByRole('button', { name: 'view' }).click()
+    
+            await blog3.getByRole('button', { name: 'like' }).click()
+            await blog3.getByRole('button', { name: 'like' }).click()
+            await blog2.getByRole('button', { name: 'like' }).click()
+
+            await page.waitForTimeout(1000)
+    
+            expect(blog3).toContainText('likes 2')
+            expect(blog2).toContainText('likes 1')
+            expect(blog1).toContainText('likes 0')
+    
+            expect(page.locator('.blog').first()).toContainText('blog-3')
+            expect(page.locator('.blog').nth(1)).toContainText('blog-2')
+            expect(page.locator('.blog').last()).toContainText('blog-1')
+        });
+        })
+
     describe('When logged in as a different user', () => {
         beforeEach(async ({ page }) => {
             await request.post('http://localhost:3003/api/users', {
