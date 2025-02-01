@@ -58,5 +58,27 @@ describe('Blog app', () => {
             
             await expect(page.getByText('likes 1')).toBeVisible()
         })
+
     })
+    describe('When logged in as a different user', () => {
+        beforeEach(async ({ page }) => {
+            await request.post('http://localhost:3003/api/users', {
+                data: {
+                  name: 'Mette Laakkainen',
+                  username: 'melaak',
+                  password: 'salasana'
+                }
+        });
+    
+        test('A non-creator cannot see the remove button', async ({ page }) => {
+          await loginWith(page, 'mluukkai', 'salainen');
+          await createBlog(page, 'Test title created by Playwright', 'http://playwright.dev');
+          await page.getByText('logout').click();
+    
+          await loginWith(page, 'melaak', 'salasana');
+          await page.getByText('view').click();
+          await expect(page.locator('text=remove')).not.toBeVisible();
+        })
+    })
+})
 })
